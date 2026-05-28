@@ -22,6 +22,8 @@ Click on any of the links to navigate through the topics:
 *   **[SQL vs. NoSQL](file:///d:/u/system-design-blueprint/03-data-tier-architecture/SQL-vs-NoSQL.md):** Relational schemas vs. Document/Key-Value/Columnar/Graph models, and ACID vs. BASE.
 *   **[CAP Theorem](file:///d:/u/system-design-blueprint/03-data-tier-architecture/cap-theorem.md):** Consistency, Availability, and Partition Tolerance tradeoffs, extended by PACELC.
 *   **[Replication and Sharding](file:///d:/u/system-design-blueprint/03-data-tier-architecture/replication-sharding.md):** High availability configurations, horizontal data sharding, and Consistent Hashing.
+*   **[Medallion & Enterprise Data Architecture](file:///d:/u/system-design-blueprint/03-data-tier-architecture/medallion-architecture.md):** End-to-end client routing, Kubernetes Bounded Contexts, external source sync, and Bronze/Silver/Gold analytics lakehouse pipelines.
+
 
 ### ⬢ [04-resilience-networks](file:///d:/u/system-design-blueprint/04-resilience-networks/)
 *   **[Communication Protocols](file:///d:/u/system-design-blueprint/04-resilience-networks/communication-protocols.md):** TCP vs. UDP, HTTP/HTTPS evolution, WebSockets for duplex channels, and gRPC.
