@@ -219,6 +219,6 @@ Business-ready structures in the Gold Data Lake are exposed directly to Business
 
 Para comprender cómo se aplica la arquitectura Medallón en escenarios empresariales complejos con restricciones de negocio, rendimiento y regulatorias, consulta los siguientes casos de uso:
 
-*   **[Caso Práctico: Banco Finanzas Perú (Riesgo Crediticio)](file:///d:/Jorge/system-design-blueprint/03-data-tier-architecture/cases/banco-finanzas-peru.md)**
+*   **[Caso Práctico: Banco Finanzas Perú (Riesgo Crediticio)](file:///d:/Jorge/system-design-blueprint/03-data-tier-architecture/cases/case-medallion-architecture.md)**
     *   *Objetivo:* Reducir el tiempo de evaluación crediticia de 72 horas a menos de 15 minutos.
     *   *Desafíos:* Ingestión de datos legados (AS/400), streaming en tiempo real (App Móvil), rate-limiting estricto (API SBS/INFOCORP) y cumplimiento regulatorio (retención de 5 años).

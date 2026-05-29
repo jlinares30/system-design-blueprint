@@ -21,7 +21,7 @@ Este caso práctico detalla la aplicación del patrón de [Arquitectura Medalló
 
 ```mermaid
 flowchart TD
-    subgraph Orígenes de Datos
+    subgraph "Orígenes de Datos"
         Core["Core Bancario (AS/400) - Batch CSV (Nocturno)"]
         CRM["CRM Comercial - API REST (Pull / CDC)"]
         Prestamos["Motor de Préstamos - API REST (Pull / CDC)"]
@@ -29,7 +29,7 @@ flowchart TD
         SBS["SBS / INFOCORP - API Externa (Limitado 50 req/h)"]
     end
 
-    subgraph Capa Bronze (Raw & Preserved)
+    subgraph "Capa Bronze (Raw & Preserved)"
         B_Core[(Bronze: raw_core_accounts)]
         B_CRM[(Bronze: raw_crm_clients)]
         B_Prestamos[(Bronze: raw_loans)]
@@ -37,7 +37,7 @@ flowchart TD
         B_SBS[(Bronze: raw_sbs_scores)]
     end
 
-    subgraph Capa Silver (Cleaned & Unified)
+    subgraph "Capa Silver (Cleaned & Unified)"
         S_Clientes[(Silver: dim_clientes)]
         S_Cuentas[(Silver: fact_saldos_historicos)]
         S_Prestamos[(Silver: fact_prestamos)]
@@ -45,11 +45,11 @@ flowchart TD
         S_Riesgo[(Silver: dim_score_financiero)]
     end
 
-    subgraph Capa Gold (Business Ready)
+    subgraph "Capa Gold (Business Ready)"
         G_Riesgo[(Gold: customer_credit_360)]
     end
 
-    subgraph Consumidores (Serving)
+    subgraph "Consumidores (Serving)"
         ML[Modelos ML / Evaluación en Tiempo Real]
         BI[Dashboards Analista de Riesgo - PowerBI]
     end
