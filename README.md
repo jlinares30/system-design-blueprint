@@ -2,6 +2,8 @@
 
 Welcome to your software architecture and system design knowledge base. This repository is designed to consolidate core design patterns, architectural styles, scalability strategies, and engineering blueprints.
 
+*   **[Technical Glossary](file:///d:/u/system-design-blueprint/GLOSSARY.md):** Central glossary containing terms and definitions referenced throughout this repository.
+
 ---
 
 ## :: Roadmap & Table of Contents
