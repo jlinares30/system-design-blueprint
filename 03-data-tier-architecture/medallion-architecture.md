@@ -168,3 +168,57 @@ Business-ready structures in the Gold Data Lake are exposed directly to Business
 *   **DirectQuery vs Import Thresholds:** Report developers should prefer data import mode for operational dashboards, and [DirectQuery](file:///d:/u/system-design-blueprint/GLOSSARY.md#directquery) only for real-time tracking dashboards that query large historical tables.
 *   *Add your custom notes on BI user roles, gateway connections, or dashboard requirements here...*
 </details>
+
+---
+
+> [!NOTE]
+> Data analytic vs Data transactional
+
+**Data analytic**
+- Data analytical architecture focuses on **data transformation, storage, and retrieval for analytics**. It deals with historical perspective.
+- Purpose: **Decision Support and Business Intelligence**
+    * Analyzes business trends, patterns, and insights.
+    * Supports strategic decision-making through reporting and dashboards.
+- Data Structure: **Denormalized**
+    * Typically uses Star Schema or Snowflake Schema for optimized query performance.
+    * Optimized for read performance and complex analytical queries.
+- Performance Metrics:
+    * **Latency:** High latency for data ingestion (minutes to hours).
+    * **Query Time:** Fast query response times (seconds to minutes).
+    * **Data Volume:** Large volumes of historical data (terabytes to petabytes).   
+
+**Data transactional**
+- Data transactional architecture focuses on **data storage and retrieval for transactions**. It deals with current perspective.
+- Purpose: **RecordKeeping and Transaction Processing**
+    * Captures day-to-day business operations (sales, orders, payments, inventory changes).
+    * Maintains data integrity and atomicity through ACID properties.
+- Data Structure: **Normalized**
+    * Typically uses 3NF (Third Normal Form) to minimize redundancy and ensure data consistency.
+    * Optimized for write performance and complex queries.
+- Performance Metrics:
+    * **Latency:** Low latency for INSERT, UPDATE, DELETE operations (milliseconds).
+    * **Concurrency:** High concurrency to handle many simultaneous transactions.
+    * **Throughput:** High throughput measured in transactions per second (TPS).
+
+---
+
+> [!IMPORTANT]
+> Why Medallion Architecture?
+> Why is important to use all this process to analyze data?
+
+1. **Data quality:** By processing data through multiple layers, we can ensure that the data is clean and accurate.
+2. **Data governance:** By using a medallion architecture, we can ensure that the data is properly governed.
+3. **Data lineage:** By using a medallion architecture, we can track the lineage of the data as it flows through the system.
+4. **Data security:** By using a medallion architecture, we can ensure that the data is properly secured.
+5. **Data can be use for differents purposes:** Data can be used for different purposes, such as **analytics**, **machine learning**, and **business intelligence**.
+6. **Data can be used for real-time processing:** Data can be processed in real-time as it flows through the system.
+
+---
+
+## ▪ Casos de Estudio y Aplicaciones Reales
+
+Para comprender cómo se aplica la arquitectura Medallón en escenarios empresariales complejos con restricciones de negocio, rendimiento y regulatorias, consulta los siguientes casos de uso:
+
+*   **[Caso Práctico: Banco Finanzas Perú (Riesgo Crediticio)](file:///d:/Jorge/system-design-blueprint/03-data-tier-architecture/cases/banco-finanzas-peru.md)**
+    *   *Objetivo:* Reducir el tiempo de evaluación crediticia de 72 horas a menos de 15 minutos.
+    *   *Desafíos:* Ingestión de datos legados (AS/400), streaming en tiempo real (App Móvil), rate-limiting estricto (API SBS/INFOCORP) y cumplimiento regulatorio (retención de 5 años).
