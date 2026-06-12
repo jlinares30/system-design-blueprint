@@ -179,6 +179,9 @@ En la arquitectura empresarial moderna, la transición de los datos transacciona
 El **ODS** actúa como una base de datos central provisional que consolida datos operativos en tiempo real de múltiples fuentes (como ERP, CRM y bases de datos transaccionales). 
 *   **Propósito:** Ofrecer consultas rápidas de estado y reportes operativos diarios sin sobrecargar las bases de datos de producción (OLTP).
 *   **Características:** Almacena datos con un nivel bajo de transformación o agregación, usualmente enfocándose en el estado actual o datos recientes (últimos 30 a 90 días).
+*   **Patrones dentro de ODS:**
+    *   **Event-Driven Ingestion:** El ODS se alimenta mediante eventos publicados por sistemas fuente (CDC, colas o streams), habilitando integración continua y desacoplada.
+    *   **Eventual Consistency:** Los datos se sincronizan de forma asíncrona entre fuentes y ODS; se prioriza disponibilidad y latencia operativa sobre consistencia fuerte inmediata.
 
 ```mermaid
 flowchart TD
