@@ -29,6 +29,25 @@ In event-driven architectures, services communicate asynchronously by publishing
 *   **Producer:** The service that generates and publishes an event.
 *   **Consumer:** A service that subscribes to and processes events.
 
+### Event Collaboration Patterns
+
+When designing event-driven systems, services can collaborate using different patterns to manage state and communication:
+
+*   **Event Notification:**
+    *   *Concept:* The publisher sends a minimal event payload notifying that a change occurred (e.g., `{"orderId": 123, "status": "Shipped"}`). The consumer must query the source system (e.g., via REST/gRPC API) if they require more details.
+    *   *Pros:* Minimal payload size; low risk of exposing sensitive data; event schemas are highly stable.
+    *   *Cons:* High callback traffic back to the producer; lower resilience (if the publisher is offline, consumers cannot get details).
+*   **Event-Carried State Transfer:**
+    *   *Concept:* The publisher includes all the data required by consumers to perform their tasks directly in the event payload (e.g., `{"orderId": 123, "items": [...], "customer": {...}, "total": 150.00}`).
+    *   *Pros:* High autonomy and resilience (consumers can process data without querying the source); zero callback traffic.
+    *   *Cons:* Larger message sizes; event schema updates are more complex; leads to data duplication across consumer databases.
+*   **Event Sourcing:**
+    *   *Concept:* The application stores every state mutation as a sequence of immutable events in an append-only *Event Store* (e.g., `Created` -> `ItemAdded` -> `Paid`). The current state of an entity is reconstructed by replaying its events.
+    *   *Pros:* Complete and immutable audit log; ability to query past states; high-performance writes.
+    *   *Cons:* High architectural complexity; event schema migration/versioning is challenging; reading current state requires projections (often paired with CQRS).
+
+---
+
 ### Saga Pattern: Orchestration vs. Choreography
 Managing distributed transactions across multiple databases to maintain eventual consistency:
 
