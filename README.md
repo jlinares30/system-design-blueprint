@@ -35,10 +35,17 @@ Click on any of the links to navigate through the topics:
 *   **[Clean & Hexagonal Architecture](file:///d:/u/system-design-blueprint/05-clean-architecture-ddd/clean-hexagonal-arch.md):** Hexagonal ports and adapters, dependency inversion, and application-layer decoupling.
 *   **[Domain-Driven Design (DDD)](file:///d:/u/system-design-blueprint/05-clean-architecture-ddd/domain-driven-design.md):** Strategic design and tactical elements (Entities, Value Objects, Aggregates, Repositories).
 
-### ▸ [06-system-design-interviews](file:///d:/u/system-design-blueprint/06-system-design-interviews/)
-*   **[System Design Template](file:///d:/u/system-design-blueprint/06-system-design-interviews/system-design-template.md):** Systematic step-by-step engineering framework (requirements, estimations, APIs, schemas, and deep dives).
-*   **[Design Case: URL Shortener](file:///d:/u/system-design-blueprint/06-system-design-interviews/design-url-shortener.md):** End-to-end design, database selection, hashing algorithms, and Key Generation Services (KGS).
-*   **[Design Case: Real-Time Messenger](file:///d:/u/system-design-blueprint/06-system-design-interviews/design-whatsapp.md):** Chat servers, persistent duplex connections, status indicators, and massive write-scaling.
+### ▸ [06-system-design-interviews](file:///d:/Jorge/system-design-blueprint/06-system-design-interviews/)
+*   **[System Design Template](file:///d:/Jorge/system-design-blueprint/06-system-design-interviews/system-design-template.md):** Systematic step-by-step engineering framework (requirements, estimations, APIs, schemas, and deep dives).
+*   **[Design Case: URL Shortener](file:///d:/Jorge/system-design-blueprint/06-system-design-interviews/design-url-shortener.md):** End-to-end design, database selection, hashing algorithms, and Key Generation Services (KGS).
+*   **[Design Case: Real-Time Messenger](file:///d:/Jorge/system-design-blueprint/06-system-design-interviews/design-whatsapp.md):** Chat servers, persistent duplex connections, status indicators, and massive write-scaling.
+
+### ⎈ [07-cloud-native-orchestration](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/)
+*   **[01. Introducción y Arquitectura K8s](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/01-introduccion-y-arquitectura-k8s.md):** Evolución desde bare-metal a contenedores, analogía del puerto, Control Plane vs Worker Nodes y ciclo de vida de un comando.
+*   **[02. Objetos Básicos (Pods, Deployments, Services)](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/02-objetos-basicos-pods-deployments-services.md):** Pods, estrategias de actualización sin caídas (Rolling Updates), tipos de servicios (ClusterIP, NodePort, LoadBalancer) y ConfigMaps/Secrets.
+*   **[03. Almacenamiento Persistente y Redes Avanzadas](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/03-almacenamiento-redes-avanzadas.md):** Gestión de volúmenes sin perder datos (PV, PVC, StorageClass), enrutamiento con Ingress Controller y Service Mesh.
+*   **[04. Escalabilidad, Resiliencia y Seguridad](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/04-escalabilidad-autoscaling-seguridad.md):** Autoescalado automático (HPA, VPA, Karpenter), revisiones médicas (Probes), límites de recursos (QoS) y RBAC.
+*   **[Caso Práctico: Despliegue de Tienda en Línea](file:///d:/Jorge/system-design-blueprint/07-cloud-native-orchestration/cases/caso-practico-despliegue-microservicios.md):** Arquitectura completa paso a paso con manifiesto YAML listo para producción.
 
 ---
 

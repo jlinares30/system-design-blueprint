@@ -41,6 +41,18 @@ An issue where a highly popular cache key expires, leading to many application t
 ### Cache-Aside
 A caching pattern where the application reads from the cache first, falling back to the database on a cache miss and updating the cache afterwards.
 
+### CNI (Container Network Interface)
+Especificación y conjunto de plugins que permiten la comunicación de red entre Pods y Nodos en Kubernetes (ej. Calico, Cilium, Flannel).
+
+### ConfigMap / Secret
+Objetos de Kubernetes utilizados para desacoplar la configuración y las credenciales/llaves sensibles del código de las aplicaciones en contenedores.
+
+### Control Plane (Plano de Control)
+El cerebro o torre de control de Kubernetes encargado de tomar decisiones globales del cluster (scheduling, detección de eventos, control de estado).
+
+### CRD (Custom Resource Definition)
+Extensión de la API de Kubernetes que permite definir objetos y recursos personalizados adaptados a necesidades específicas.
+
 ### CAP Theorem
 A theorem stating that a distributed data system can guarantee at most two of three properties simultaneously: Consistency, Availability, and Partition Tolerance.
 
