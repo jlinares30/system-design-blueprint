@@ -171,47 +171,104 @@ Business-ready structures in the Gold Data Lake are exposed directly to Business
 
 ---
 
-> [!NOTE]
-> Data analytic vs Data transactional
+## ▪ Conceptos Avanzados de Datos y Patrones de Integración
 
-**Data analytic**
-- Data analytical architecture focuses on **data transformation, storage, and retrieval for analytics**. It deals with historical perspective.
-- Purpose: **Decision Support and Business Intelligence**
-    * Analyzes business trends, patterns, and insights.
-    * Supports strategic decision-making through reporting and dashboards.
-- Data Structure: **Denormalized**
-    * Typically uses Star Schema or Snowflake Schema for optimized query performance.
-    * Optimized for read performance and complex analytical queries.
-- Performance Metrics:
-    * **Latency:** High latency for data ingestion (minutes to hours).
-    * **Query Time:** Fast query response times (seconds to minutes).
-    * **Data Volume:** Large volumes of historical data (terabytes to petabytes).   
+En la arquitectura empresarial moderna, la transición de los datos transaccionales a los analíticos requiere patrones específicos para garantizar el rendimiento, la frescura de los datos y evitar el impacto negativo en los sistemas de producción:
 
-**Data transactional**
-- Data transactional architecture focuses on **data storage and retrieval for transactions**. It deals with current perspective.
-- Purpose: **RecordKeeping and Transaction Processing**
-    * Captures day-to-day business operations (sales, orders, payments, inventory changes).
-    * Maintains data integrity and atomicity through ACID properties.
-- Data Structure: **Normalized**
-    * Typically uses 3NF (Third Normal Form) to minimize redundancy and ensure data consistency.
-    * Optimized for write performance and complex queries.
-- Performance Metrics:
-    * **Latency:** Low latency for INSERT, UPDATE, DELETE operations (milliseconds).
-    * **Concurrency:** High concurrency to handle many simultaneous transactions.
-    * **Throughput:** High throughput measured in transactions per second (TPS).
+### 1. [ODS (Operational Data Store)](file:///d:/u/system-design-blueprint/GLOSSARY.md#ods-operational-data-store)
+El **ODS** actúa como una base de datos central provisional que consolida datos operativos en tiempo real de múltiples fuentes (como ERP, CRM y bases de datos transaccionales). 
+*   **Propósito:** Ofrecer consultas rápidas de estado y reportes operativos diarios sin sobrecargar las bases de datos de producción (OLTP).
+*   **Características:** Almacena datos con un nivel bajo de transformación o agregación, usualmente enfocándose en el estado actual o datos recientes (últimos 30 a 90 días).
+*   **Patrones dentro de ODS:**
+    *   **Event-Driven Ingestion:** El ODS se alimenta mediante eventos publicados por sistemas fuente (CDC, colas o streams), habilitando integración continua y desacoplada.
+    *   **Eventual Consistency:** Los datos se sincronizan de forma asíncrona entre fuentes y ODS; se prioriza disponibilidad y latencia operativa sobre consistencia fuerte inmediata.
+
+```mermaid
+flowchart TD
+    subgraph Fuentes_OLTP [Bases de Datos Transaccionales - OLTP]
+        DB1[(App DB)]
+        DB2[(CRM System)]
+        DB3[(ERP System)]
+    end
+
+    subgraph Integracion [Capa de Integración en Tiempo Real]
+        CDC[CDC / Replicación Activa]
+    end
+
+    subgraph Capa_ODS [Operational Data Store - ODS]
+        ODS_DB[(ODS Database)]
+        ODS_DB -->|Tiempo Real / Datos Recientes| Rep_Ops[Reportes Operacionales / Call Center]
+        ODS_DB -->|Consultas Rápidas de Estado| Ops_Dash[Dashboards Operacionales del Día]
+    end
+
+    subgraph Capa_Analitica [Capa Analítica de Largo Plazo]
+        ETL[ETL / ELT Pipeline]
+        Lakehouse[(Data Lakehouse / Medallion)]
+    end
+
+    %% Flujos de datos
+    DB1 -->|CDC / Eventos| CDC
+    DB2 -->|CDC / Eventos| CDC
+    DB3 -->|CDC / Eventos| CDC
+
+    CDC -->|Ingestión Continua| ODS_DB
+    ODS_DB -->|Carga de Historial Incremental| ETL
+    ETL -->|Refinamiento y Agregación| Lakehouse
+```
+
+
+### 2. [CDC (Change Data Capture)](file:///d:/u/system-design-blueprint/GLOSSARY.md#cdc-change-data-capture)
+El patrón **CDC** es un conjunto de tecnologías que identifica y captura cambios (inserciones, actualizaciones y eliminaciones) realizados en una base de datos origen, publicando estos eventos en tiempo real a consumidores descendentes.
+*   **Implementación común:** Lectura de los registros de transacciones (transaction logs) del motor de base de datos (por ejemplo, usando herramientas como Debezium y Kafka Connect).
+*   **Beneficios:** Evita realizar consultas periódicas costosas (`SELECT * FROM table WHERE updated_at > ...`) que causan bloqueos e impacto de rendimiento en producción.
+
+### 3. [Database Lookups](file:///d:/u/system-design-blueprint/GLOSSARY.md#database-lookup)
+Un **Lookup** en base de datos es una operación de consulta de referencia que busca valores específicos en tablas secundarias utilizando un identificador (por ejemplo, buscar el nombre del cliente basado en `client_id` al procesar un evento de envío).
+*   **Estrategias de optimización:** Dado que los lookups frecuentes en pipelines de datos pueden convertirse en un cuello de botella, se optimizan mediante índices secundarios, almacenamiento en memoria (como Redis) o uniones locales (joins en caché).
+
+### 4. [Triggers](file:///d:/u/system-design-blueprint/GLOSSARY.md#trigger)
+Un **Trigger** (disparador) es un bloque de código procedimental que reside y se ejecuta automáticamente dentro del motor de base de datos en respuesta a eventos de manipulación de datos (`INSERT`, `UPDATE`, `DELETE`).
+*   **Consideraciones en diseño:** Aunque son útiles para mantener la integridad de datos a nivel local o auditar cambios simples, el uso excesivo de triggers dificulta la depuración del sistema, introduce latencia oculta en las transacciones y limita la escalabilidad horizontal. En sistemas distribuidos, suele preferirse el patrón CDC para reaccionar a cambios de forma asíncrona.
+
+---
+
+## ▪ Comparativas de Arquitectura de Datos
+
+### Cuadro Comparativo: Datos Operacionales (Transaccionales) vs. Datos Analíticos
+
+| Característica / Criterio | Datos Operacionales (OLTP / Transaccional) | Datos Analíticos (OLAP / Analítico) |
+| :--- | :--- | :--- |
+| **Propósito Principal** | Ejecutar operaciones diarias y registrar transacciones de negocio. | Soportar la toma de decisiones, análisis de tendencias y BI. |
+| **Operaciones Comunes** | Escrituras, actualizaciones y lecturas rápidas de registros individuales (CRUD). | Consultas complejas de lectura y agregación masiva de datos. |
+| **Diseño / Estructura** | Altamente normalizado (3NF) para eliminar redundancia. | Desnormalizado (Esquemas de Estrella, Copo de Nieve, Columnar). |
+| **Dimensión Temporal** | Estado actual y en tiempo real (instantánea del momento). | Histórico acumulativo (años de evolución del negocio). |
+| **Concurrencia** | Miles de transacciones simultáneas por segundo (TPS). | Consultas concurrentes moderadas pero de alto costo de cómputo. |
+| **Garantías de Datos** | Estricto cumplimiento de propiedades [ACID](file:///d:/u/system-design-blueprint/GLOSSARY.md#acid). | Consistencia eventual y procesamiento por lotes ([BASE](file:///d:/u/system-design-blueprint/GLOSSARY.md#base)). |
+| **Volumen de Datos** | Relativamente bajo o mediano (datos de producción activos). | Altamente masivo (terabytes a petabytes). |
+
+### Cuadro Comparativo: ODS (Operational Data Store) vs. Arquitectura Medallón
+
+| Característica / Criterio | Operational Data Store (ODS) | Arquitectura Medallón (Lakehouse) |
+| :--- | :--- | :--- |
+| **Enfoque Principal** | Integración y visualización en tiempo real de operaciones diarias activas. | Limpieza, refinamiento estructural y almacenamiento analítico a largo plazo. |
+| **Estructura de Datos** | Estructuras operacionales normalizadas o semiesféricas. | Dividida en capas progresivas: Bronce (Crudo), Plata (Limpio) y Oro (Agregado). |
+| **Histórico** | Limitado (usualmente almacena datos recientes del negocio, ej. 30 días). | Completo e ilimitado (persiste la historia total de transacciones). |
+| **Almacenamiento Físico** | Motores relacionales tradicionales (OLTP como PostgreSQL, SQL Server). | Formatos de archivos distribuidos optimizados ([Delta / Parquet](file:///d:/u/system-design-blueprint/GLOSSARY.md#delta-parquet-format)). |
+| **Ingestión típica** | Replicación activa de base de datos o CDC en tiempo real. | Procesamiento batch programado o pipelines de streaming incremental. |
+| **Consumidores** | Sistemas operacionales de soporte, Call Centers, tableros de control diarios. | Herramientas de BI ([PowerBI](file:///d:/u/system-design-blueprint/03-data-tier-architecture/medallion-architecture.md#powerbi), [Looker](file:///d:/u/system-design-blueprint/03-data-tier-architecture/medallion-architecture.md#looker)) y modelos de Machine Learning. |
 
 ---
 
 > [!IMPORTANT]
 > Why Medallion Architecture?
 > Why is important to use all this process to analyze data?
-
-1. **Data quality:** By processing data through multiple layers, we can ensure that the data is clean and accurate.
-2. **Data governance:** By using a medallion architecture, we can ensure that the data is properly governed.
-3. **Data lineage:** By using a medallion architecture, we can track the lineage of the data as it flows through the system.
-4. **Data security:** By using a medallion architecture, we can ensure that the data is properly secured.
-5. **Data can be use for differents purposes:** Data can be used for different purposes, such as **analytics**, **machine learning**, and **business intelligence**.
-6. **Data can be used for real-time processing:** Data can be processed in real-time as it flows through the system.
+> 
+> 1. **Data quality:** By processing data through multiple layers, we can ensure that the data is clean and accurate.
+> 2. **Data governance:** By using a medallion architecture, we can ensure that the data is properly governed.
+> 3. **Data lineage:** By using a medallion architecture, we can track the lineage of the data as it flows through the system.
+> 4. **Data security:** By using a medallion architecture, we can ensure that the data is properly secured.
+> 5. **Data can be use for differents purposes:** Data can be used for different purposes, such as **analytics**, **machine learning**, and **business intelligence**.
+> 6. **Data can be used for real-time processing:** Data can be processed in real-time as it flows through the system.
 
 ---
 

@@ -56,6 +56,9 @@ Extensión de la API de Kubernetes que permite definir objetos y recursos person
 ### CAP Theorem
 A theorem stating that a distributed data system can guarantee at most two of three properties simultaneously: Consistency, Availability, and Partition Tolerance.
 
+### CDC (Change Data Capture)
+A software design pattern that detects and captures change events (inserts, updates, deletes) in a source database and delivers them in real-time to downstream systems (such as search indexes, caches, or data lakehouses).
+
 ### CDN (Content Delivery Network)
 A geographically distributed group of servers caching static assets close to end users.
 
@@ -80,6 +83,9 @@ A microservice pattern where each service owns its data storage exclusively, exp
 
 ### Delta / Parquet Format
 Optimized, compressed columnar storage file formats designed to handle massive data read operations in analytical pipelines.
+
+### Database Lookup
+The process of querying a database table to retrieve specific values or reference records based on an identifier or key, often optimized using secondary indexes or cached datasets to reduce query latency.
 
 ### DHT (Distributed Hash Table)
 A decentralized storage system providing lookup services similar to a hash table without central servers.
@@ -181,6 +187,13 @@ A traditional software design packaging the user interface, business rules, and 
 
 ---
 
+## :: O
+
+### ODS (Operational Data Store)
+A central database used for immediate, real-time operational reporting and decision support on current data. It aggregates clean data from multiple source systems, serving as an interim structure before data is sent to a data warehouse or lakehouse.
+
+---
+
 ## :: P
 
 ### PACELC
@@ -224,6 +237,9 @@ A database modeling structure featuring a central transactional Fact Table surro
 
 ### TCP
 A connection-oriented transport protocol guaranteeing packet ordering and transmission safety.
+
+### Trigger
+A procedural database object that automatically executes a predefined block of code in response to specific events (like INSERT, UPDATE, or DELETE) on a particular table.
 
 ---
 
